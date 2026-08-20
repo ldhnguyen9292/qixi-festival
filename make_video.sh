@@ -13,7 +13,7 @@ cd "$(dirname "$0")"
 T_NAME="BONNIE"
 T_SUB="ADVENTURE TOUR"
 T_FOOT1="Phim tài liệu 1 tập"
-T_FOOT2="Hội đồng Ẩm thực Cần Giờ sản xuất"
+T_FOOT2="Chủ Shop Heo Cơ CTin sản xuất"
 
 E1="Học kì mới rồi,"
 E2="em hãy tập một số"

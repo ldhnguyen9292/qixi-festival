@@ -135,8 +135,7 @@
     <div class="card">
       <span class="kicker">Bản 2.0 · Đã kiểm định 💗</span>
       <h1>Chào mừng em đến với HỆ THỐNG ĐÁNH GIÁ CHUYẾN ĐI FOOD TOUR Ở SÀI GÒN</h1>
-      <p class="sub">Em vừa hoàn thành một chuyến đi ăn không hồi kết. Trước khi nhận phần thưởng, vui lòng trả lời <b>4 câu hỏi</b> của hội đồng.</p>
-      <p class="sub">⚠️ Hệ thống có khả năng phát hiện nói dối bằng mùi nước mắm. Xin trả lời thành thật.</p>
+      <p class="sub">Xin chúc mừng, em vừa hoàn thành một chuyến đi ăn không hồi kết. Vui lòng cho chủ tour một vài <b>feedback</b> nhé.</p>
       <button class="btn big" id="start">BẮT ĐẦU ĐÁNH GIÁ 🍤</button>
     </div>
   </section>
@@ -156,7 +155,7 @@
   <section class="screen" id="s-load">
     <div class="card loadbox">
       <div class="spin"></div>
-      <div class="loadtxt" id="loadTxt">Đang khởi động hội đồng...</div>
+      <div class="loadtxt" id="loadTxt">Đang khởi động hệ thống...</div>
     </div>
   </section>
 
@@ -168,7 +167,7 @@
       <div class="title" id="rTitle"></div>
       <div class="score" id="rScore">0<small>/100</small></div>
       <div class="verdict" id="rVerdict"></div>
-      <div class="stamp">ĐÃ ĐÓNG DẤU · HỘI ĐỒNG ẨM THỰC CẦN GIỜ</div>
+      <div class="stamp">ĐÃ ĐÓNG DẤU · CHỦ SHOP HEO CƠ CTIN</div>
       <div class="note"><span class="ico">🎧</span><span>Do video có nhạc, đề nghị em <b>đeo tai nghe vô</b> (hoặc mở loa to lên) cho đã nha!</span></div>
       <button class="btn big" id="toVideo">🎬 MỞ PHẦN THƯỞNG</button>
     </div>
@@ -239,7 +238,7 @@
     'Hệ thống ghi nhận: tay run.',
     'Ngôi sao đó hư rồi, thử ngôi sao khác đi.',
     'Đừng cố, em được lập trình để né 😌',
-    'Hội đồng đang theo dõi em đó.',
+    'Chủ Shop Heo Cơ CTin đang theo dõi em đó.',
     'Bấm nữa là bị mời ra khỏi quán nha.'
   ];
 
@@ -250,7 +249,7 @@
     'Đang hỏi ý kiến chú xe ôm đầu hẻm...',
     'Đang cân lại số ký tăng sau chuyến đi...',
     'Đang kiểm tra hoá đơn (giật mình)...',
-    'Đang xin vía từ Hội đồng Ẩm thực Cần Giờ...',
+    'Đang xin vía từ Chủ Shop Heo Cơ CTin...',
     'Xong! Kết quả gây sốc 😱'
   ];
 
@@ -265,16 +264,16 @@
   };
 
   var CAY = [
-    'Hệ <b>Không Cay</b> — hội đồng cảnh cáo nhẹ, lần sau cố lên.',
+    'Hệ <b>Không Cay</b> — Chủ Shop Heo Cơ CTin cảnh cáo nhẹ, lần sau cố lên.',
     'Hệ <b>Cay Nhẹ</b> — an toàn, chuẩn mực, hơi thiếu drama.',
     'Hệ <b>Cay Xé</b> — vừa ăn vừa hít hà, rất được lòng chủ quán.',
-    'Hệ <b>Sa Tế</b> — hội đồng đề nghị kiểm tra lại lưỡi của em.'
+    'Hệ <b>Sa Tế</b> — Chủ Shop Heo Cơ CTin đề nghị kiểm tra lại lưỡi của em.'
   ];
 
   var LAI = {
     co:'Ngoan. Đã ghi tên vào danh sách chuyến sau.',
     chacchan:'Nhiệt tình quá mức cho phép. Đã ghi tên 2 lần.',
-    gia:'Hội đồng ghi nhận: hợp đồng ăn uống trọn gói tới già 🍜',
+    gia:'Chủ Shop Heo Cơ CTin ghi nhận: hợp đồng ăn uống trọn gói tới già 🍜',
     bao:'Hệ thống đã ghi âm lời hứa này. Hợp đồng trọn đời, không huỷ ngang nha 💍'
   };
 
@@ -356,7 +355,7 @@
         b.addEventListener('click', function(){
           paint(5);
           lbl.innerHTML = STAR_LABELS[5];
-          $('taunt').textContent = 'Chuẩn luôn! Hội đồng rất hài lòng 💖';
+          $('taunt').textContent = 'Chuẩn luôn! Chủ Shop Heo Cơ CTin rất hài lòng 💖';
           A.sao = 5;
           setTimeout(next, 700);
         });
