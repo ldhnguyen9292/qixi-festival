@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Hệ Thống Đánh Giá Food Tour Sài Gòn</title>
+<style>
+  :root{
+    --bg1:#fff2f7; --bg2:#ffe0ee; --bg3:#ffd0e6;
+    --card:#ffffff; --line:#ffd0e2; --line2:#ffb8d4;
+    --pink:#ff3d86; --pink2:#ff7ab0; --pink3:#ffe9f2;
+    --ink:#4a1330; --muted:#a86b8a; --good:#ff2f7d;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--ink);
+    background:
+      radial-gradient(900px 520px at 12% -8%, #ffd9ea 0%, transparent 60%),
+      radial-gradient(900px 520px at 92% 8%, #ffe6c9 0%, transparent 55%),
+      linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg3) 100%);
+    background-attachment:fixed;
+    font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Roboto,Arial,sans-serif;
+    display:flex; align-items:center; justify-content:center;
+    padding:20px; overflow-x:hidden;
+  }
+  #app{width:100%; max-width:620px; position:relative; z-index:2}
+  .screen{display:none; animation:pop .45s cubic-bezier(.2,.9,.3,1.3)}
+  .screen.on{display:block}
+  @keyframes pop{from{opacity:0; transform:translateY(18px) scale(.97)}to{opacity:1; transform:none}}
+
+  .card{
+    background:var(--card); border:2px solid var(--line); border-radius:26px;
+    padding:30px 26px; box-shadow:0 20px 50px rgba(255,77,140,.18), 0 2px 0 #fff inset;
+  }
+  h1{
+    font-size:clamp(25px,6.2vw,40px); line-height:1.16; margin:0 0 14px; letter-spacing:-.6px;
+    background:linear-gradient(120deg,#ff2f7d,#ff7ab0 55%,#ffa76b);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  h2{font-size:clamp(21px,4.6vw,29px); line-height:1.32; margin:0 0 20px; color:var(--ink)}
+  p.sub{color:var(--muted); font-size:16px; line-height:1.68; margin:0 0 10px}
+  p.sub b{color:var(--pink)}
+  .kicker{
+    display:inline-block; font-size:12px; letter-spacing:2.2px; text-transform:uppercase;
+    color:var(--pink); background:var(--pink3); border:1px solid var(--line);
+    padding:7px 14px; border-radius:99px; margin-bottom:16px; font-weight:700;
+  }
+  .btn{
+    display:block; width:100%; margin-top:11px; padding:16px 18px;
+    font-size:17px; font-weight:700; font-family:inherit; text-align:left;
+    color:var(--ink); background:#fff7fa; border:2px solid var(--line);
+    border-radius:16px; cursor:pointer; transition:transform .12s, background .18s, border-color .18s, box-shadow .18s;
+  }
+  .btn:hover{background:var(--pink3); border-color:var(--line2); transform:translateX(4px); box-shadow:0 6px 16px rgba(255,77,140,.18)}
+  .btn:active{transform:scale(.98)}
+  .btn.big{
+    text-align:center; font-size:19px; letter-spacing:.4px; margin-top:24px; color:#fff;
+    background:linear-gradient(120deg,var(--pink),#ff6aa5); border-color:#ff8cbb;
+    box-shadow:0 12px 26px rgba(255,61,134,.34);
+  }
+  .btn.big:hover{transform:translateY(-2px); background:linear-gradient(120deg,#ff2a78,#ff5fa0)}
+  .btn.ghost{text-align:center; font-size:15px; background:transparent; color:var(--muted); border-color:transparent}
+  .btn.ghost:hover{background:var(--pink3); transform:none; box-shadow:none}
+
+  .bar{height:9px; background:var(--pink3); border-radius:99px; overflow:hidden; margin-bottom:22px; border:1px solid var(--line)}
+  .bar>i{display:block; height:100%; width:0; border-radius:99px;
+    background:linear-gradient(90deg,#ffa76b,var(--pink)); transition:width .4s ease}
+  .step{font-size:12.5px; color:var(--pink); font-weight:700; letter-spacing:1.6px; margin-bottom:8px}
+
+  /* ---- câu 3: widget chấm sao ---- */
+  .ratebox{
+    background:linear-gradient(180deg,#fff8fb,var(--pink3)); border:2px dashed var(--line2);
+    border-radius:20px; padding:20px 14px 16px; text-align:center; margin-top:4px;
+  }
+  .rate{display:flex; justify-content:center; align-items:center; gap:4px; min-height:76px}
+  .st{
+    font-size:clamp(36px,10vw,48px); line-height:1; padding:4px 2px; cursor:pointer;
+    background:none; border:0; font-family:inherit; color:#ffc9dd;
+    transition:transform .32s cubic-bezier(.25,1.6,.45,1), color .18s, filter .2s;
+  }
+  .st.lit{color:var(--pink); filter:drop-shadow(0 6px 12px rgba(255,61,134,.35))}
+  .ratelabel{font-size:17px; font-weight:800; color:var(--pink); min-height:26px; margin-top:6px}
+  .ratehint{font-size:13px; color:var(--muted); margin-top:2px}
+  .taunt{color:var(--pink); font-size:14px; min-height:22px; margin-top:10px; font-style:italic; text-align:center}
+
+  .loadbox{text-align:center; padding:44px 26px}
+  .spin{width:56px; height:56px; margin:0 auto 24px; border-radius:50%;
+    border:5px solid var(--pink3); border-top-color:var(--pink); animation:sp .9s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .loadtxt{color:var(--muted); font-size:16px; min-height:48px}
+
+  .result{text-align:center}
+  .medal{font-size:62px; line-height:1; margin-bottom:4px}
+  .title{
+    font-size:clamp(23px,5.4vw,34px); font-weight:800; line-height:1.22; margin:6px 0 16px;
+    background:linear-gradient(120deg,#ff2f7d,#ff8f5e); -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .score{font-size:58px; font-weight:800; color:var(--good); line-height:1}
+  .score small{font-size:19px; color:var(--muted); font-weight:600}
+  .verdict{border-top:2px dashed var(--line); margin-top:20px; padding-top:18px; text-align:left}
+  .verdict div{color:var(--muted); font-size:15px; line-height:1.85; margin-bottom:4px}
+  .verdict b{color:var(--ink)}
+  .stamp{
+    display:inline-block; margin-top:18px; padding:9px 15px; border:2px dashed var(--pink2);
+    color:var(--pink); border-radius:12px; font-size:12.5px; letter-spacing:1.5px;
+    transform:rotate(-3deg); font-weight:700; background:#fff6fa;
+  }
+
+  .note{
+    display:flex; gap:11px; align-items:center; text-align:left;
+    background:var(--pink3); border:2px solid var(--line2); border-radius:16px;
+    padding:14px 16px; margin-top:20px; color:var(--ink); font-size:15px; line-height:1.55;
+  }
+  .note .ico{font-size:26px; line-height:1; animation:bob 1.6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .note b{color:var(--pink)}
+
+  video{width:100%; border-radius:18px; background:#000; display:block; border:2px solid var(--line)}
+  .placeholder{border:2px dashed var(--line2); border-radius:18px; padding:44px 22px; text-align:center; background:var(--pink3)}
+  .placeholder code{background:#fff; padding:3px 9px; border-radius:7px; color:var(--pink); font-size:14px; border:1px solid var(--line)}
+
+  .rain{position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden}
+  .rain span{position:absolute; top:-8vh; font-size:26px; animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(115vh) rotate(420deg); opacity:0}}
+  @media (max-width:420px){ .card{padding:24px 18px} }
+</style>
+</head>
+<body>
+<div class="rain" id="rain"></div>
+<div id="app">
+
+  <!-- 1. WELCOME -->
+  <section class="screen on" id="s-welcome">
+    <div class="card">
+      <span class="kicker">Bản 2.0 · Đã kiểm định 💗</span>
+      <h1>Chào mừng em đến với HỆ THỐNG ĐÁNH GIÁ CHUYẾN ĐI FOOD TOUR Ở SÀI GÒN</h1>
+      <p class="sub">Em vừa hoàn thành một chuyến đi ăn không hồi kết. Trước khi nhận phần thưởng, vui lòng trả lời <b>4 câu hỏi</b> của hội đồng.</p>
+      <p class="sub">⚠️ Hệ thống có khả năng phát hiện nói dối bằng mùi nước mắm. Xin trả lời thành thật.</p>
+      <button class="btn big" id="start">BẮT ĐẦU ĐÁNH GIÁ 🍤</button>
+    </div>
+  </section>
+
+  <!-- 2. QUIZ -->
+  <section class="screen" id="s-quiz">
+    <div class="card">
+      <div class="step" id="stepTxt">CÂU 1/4</div>
+      <div class="bar"><i id="barFill"></i></div>
+      <h2 id="qTitle"></h2>
+      <div id="qBody"></div>
+      <div class="taunt" id="taunt"></div>
+    </div>
+  </section>
+
+  <!-- 3. LOADING -->
+  <section class="screen" id="s-load">
+    <div class="card loadbox">
+      <div class="spin"></div>
+      <div class="loadtxt" id="loadTxt">Đang khởi động hội đồng...</div>
+    </div>
+  </section>
+
+  <!-- 4. RESULT -->
+  <section class="screen" id="s-result">
+    <div class="card result">
+      <div class="medal" id="medal">🏆</div>
+      <span class="kicker">Kết quả giám định</span>
+      <div class="title" id="rTitle"></div>
+      <div class="score" id="rScore">0<small>/100</small></div>
+      <div class="verdict" id="rVerdict"></div>
+      <div class="stamp">ĐÃ ĐÓNG DẤU · HỘI ĐỒNG ẨM THỰC CẦN GIỜ</div>
+      <div class="note"><span class="ico">🎧</span><span>Do video có nhạc, đề nghị em <b>đeo tai nghe vô</b> (hoặc mở loa to lên) cho đã nha!</span></div>
+      <button class="btn big" id="toVideo">🎬 MỞ PHẦN THƯỞNG</button>
+    </div>
+  </section>
+
+  <!-- 5. VIDEO -->
+  <section class="screen" id="s-video">
+    <div class="card">
+      <span class="kicker">Phần thưởng 💝</span>
+      <h2 style="margin-bottom:14px">Cảm ơn em. Đây là kỷ niệm chuyến đi 💖</h2>
+      <div class="note" style="margin:0 0 16px"><span class="ico">🎧</span><span>Nhớ đeo tai nghe vô nha — video có nhạc đó!</span></div>
+      <video id="vid" controls playsinline preload="metadata">
+        <source src="video.mp4" type="video/mp4">
+      </video>
+      <div class="placeholder" id="vidPlaceholder" style="display:none">
+        <div style="font-size:44px">🎬</div>
+        <p class="sub" style="margin-top:12px">Chưa có video.<br>Bỏ file tên <code>video.mp4</code> vào cùng thư mục với file này là xong.</p>
+      </div>
+      <button class="btn ghost" id="again">↺ Làm lại từ đầu</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var A = {};
+
+  var QUESTIONS = [
+    {
+      key:'mon',
+      title:'Món ăn nào em thích nhất trong chuyến đi?',
+      opts:[
+        {t:'🍚 Cơm tấm', v:'comtam'},
+        {t:'🍗 Chivago', v:'chivago'},
+        {t:'🦐 Bánh canh tôm tít & sinh tố dừa nước', v:'tomtit'},
+        {t:'🍤 Cơm chiên hải sản & rau muống xào tỏi', v:'comchien'},
+        {t:'🥟 Há cảo chiên', v:'hacao'},
+        {t:'🍧 Chè', v:'che'},
+        {t:'🍣 Sushi chay', v:'sushi'}
+      ]
+    },
+    {
+      key:'cay',
+      title:'Mức độ chịu cay của em tới đâu?',
+      opts:[
+        {t:'😇 Không cay, cay là em khóc', v:0},
+        {t:'🙂 Cay nhẹ thôi cho có vị', v:1},
+        {t:'🥵 Cay xé lưỡi vẫn ăn tiếp', v:2},
+        {t:'🔥 "Cho thêm sa tế đi anh ơi"', v:3}
+      ]
+    },
+    { key:'sao', type:'stars', title:'Em chấm chuyến đi Cần Giờ mấy sao?' },
+    {
+      key:'lai', type:'runaway',
+      title:'Em có sẵn sàng đi chuyến tiếp theo không?',
+      opts:[
+        {t:'✅ Có', v:'co'},
+        {t:'💖 Chắc chắn có', v:'chacchan'},
+        {t:'🍜 Có, đi hoài tới già luôn', v:'gia'},
+        {t:'💍 Có, và anh bao em trọn đời', v:'bao'}
+      ]
+    }
+  ];
+
+  var TAUNTS = [
+    'Ơ kìa, bấm trúng đi chứ 👀',
+    'Hệ thống ghi nhận: tay run.',
+    'Ngôi sao đó hư rồi, thử ngôi sao khác đi.',
+    'Đừng cố, em được lập trình để né 😌',
+    'Hội đồng đang theo dõi em đó.',
+    'Bấm nữa là bị mời ra khỏi quán nha.'
+  ];
+
+  var STAR_LABELS = ['', 'Tệ 😤', 'Tạm được 🙃', 'Cũng ổn 😌', 'Ngon lành 😋', 'TUYỆT VỜI ÔNG MẶT TRỜI 💖'];
+
+  var LOADS = [
+    'Đang đối chiếu dữ liệu với 47 quán ốc...',
+    'Đang hỏi ý kiến chú xe ôm đầu hẻm...',
+    'Đang cân lại số ký tăng sau chuyến đi...',
+    'Đang kiểm tra hoá đơn (giật mình)...',
+    'Đang xin vía từ Hội đồng Ẩm thực Cần Giờ...',
+    'Xong! Kết quả gây sốc 😱'
+  ];
+
+  var TITLES = {
+    comtam:  {m:'🍚', t:'TÍN ĐỒ CƠM TẤM SƯỜN BÌ CHẢ', d:'Đi đâu cũng được, miễn cuối ngày có dĩa cơm tấm.'},
+    chivago: {m:'🍗', t:'ĐẠI SỨ THƯƠNG HIỆU CHIVAGO', d:'Ăn tới mức quán nên trả lương cho em.'},
+    tomtit:  {m:'🦐', t:'THỢ SĂN TÔM TÍT CẦN GIỜ', d:'Sinh tố dừa nước cũng không thoát khỏi tay em.'},
+    comchien:{m:'🍤', t:'CHIẾN THẦN CƠM CHIÊN & RAU MUỐNG', d:'Một mình cân cả mâm, rau muống hết sạch trong 3 phút.'},
+    hacao:   {m:'🥟', t:'TRÙM CUỐI HÁ CẢO CHIÊN', d:'Gọi 1 dĩa cho lịch sự, rồi gọi thêm 4 dĩa.'},
+    che:     {m:'🍧', t:'QUỶ VƯƠNG HẢO NGỌT', d:'Ăn mặn chỉ là thủ tục để tới phần chè.'},
+    sushi:   {m:'🍣', t:'THIỀN SƯ SUSHI CHAY', d:'Ăn chay rất thành tâm, chỉ là nhìn dĩa hải sản bên cạnh hơi lâu.'}
+  };
+
+  var CAY = [
+    'Hệ <b>Không Cay</b> — hội đồng cảnh cáo nhẹ, lần sau cố lên.',
+    'Hệ <b>Cay Nhẹ</b> — an toàn, chuẩn mực, hơi thiếu drama.',
+    'Hệ <b>Cay Xé</b> — vừa ăn vừa hít hà, rất được lòng chủ quán.',
+    'Hệ <b>Sa Tế</b> — hội đồng đề nghị kiểm tra lại lưỡi của em.'
+  ];
+
+  var LAI = {
+    co:'Ngoan. Đã ghi tên vào danh sách chuyến sau.',
+    chacchan:'Nhiệt tình quá mức cho phép. Đã ghi tên 2 lần.',
+    gia:'Hội đồng ghi nhận: hợp đồng ăn uống trọn gói tới già 🍜',
+    bao:'Hệ thống đã ghi âm lời hứa này. Hợp đồng trọn đời, không huỷ ngang nha 💍'
+  };
+
+  var idx = 0;
+  var $ = function(id){ return document.getElementById(id); };
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+  function show(id){
+    var all = document.querySelectorAll('.screen');
+    for (var i=0;i<all.length;i++) all[i].classList.remove('on');
+    $(id).classList.add('on');
+    window.scrollTo(0,0);
+  }
+
+  function render(){
+    var q = QUESTIONS[idx];
+    $('stepTxt').textContent = 'CÂU ' + (idx+1) + '/' + QUESTIONS.length;
+    $('barFill').style.width = (idx/QUESTIONS.length*100) + '%';
+    $('qTitle').textContent = q.title;
+    $('taunt').textContent = '';
+    var body = $('qBody');
+    body.innerHTML = '';
+
+    if (q.type === 'stars') { renderStars(body, q); return; }
+
+    for (var i=0;i<q.opts.length;i++) (function(o){
+      var b = document.createElement('button');
+      b.className = 'btn';
+      b.textContent = o.t;
+      b.onclick = function(){ A[q.key] = o.v; next(); };
+      body.appendChild(b);
+    })(q.opts[i]);
+
+    if (q.type === 'runaway') {
+      var no = document.createElement('button');
+      no.className = 'btn';
+      no.textContent = '❌ Không';
+      no.style.transition = 'transform .28s cubic-bezier(.25,1.6,.45,1)';
+      var flee = function(e){
+        if (e) e.preventDefault();
+        var x = (Math.random()*2-1)*95, y = (Math.random()*2-1)*70;
+        no.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px) rotate(' + (x/12).toFixed(1) + 'deg)';
+        $('taunt').textContent = pick(TAUNTS);
+      };
+      no.addEventListener('mouseenter', flee);
+      no.addEventListener('pointerdown', flee);
+      no.addEventListener('click', function(e){ e.preventDefault(); flee(); });
+      body.appendChild(no);
+    }
+  }
+
+  function renderStars(body){
+    var box = document.createElement('div');
+    box.className = 'ratebox';
+    box.innerHTML =
+      '<div class="rate" id="rateRow"></div>' +
+      '<div class="ratelabel" id="rateLabel">&nbsp;</div>' +
+      '<div class="ratehint">Chạm vào ngôi sao để chấm điểm</div>';
+    body.appendChild(box);
+
+    var row = box.querySelector('#rateRow');
+    var lbl = box.querySelector('#rateLabel');
+    var stars = [];
+
+    function paint(n){
+      for (var i=0;i<5;i++) stars[i].className = 'st' + (i < n ? ' lit' : '');
+      lbl.innerHTML = n ? STAR_LABELS[n] : '&nbsp;';
+    }
+
+    for (var i=0;i<5;i++) (function(i){
+      var b = document.createElement('button');
+      b.className = 'st';
+      b.textContent = '★';
+      b.setAttribute('aria-label', (i+1) + ' sao');
+      stars.push(b);
+
+      if (i === 4) {
+        b.addEventListener('mouseenter', function(){ paint(5); });
+        b.addEventListener('click', function(){
+          paint(5);
+          lbl.innerHTML = STAR_LABELS[5];
+          $('taunt').textContent = 'Chuẩn luôn! Hội đồng rất hài lòng 💖';
+          A.sao = 5;
+          setTimeout(next, 700);
+        });
+      } else {
+        var flee = function(e){
+          if (e) e.preventDefault();
+          var x = (Math.random()*2-1)*46, y = -18 - Math.random()*26;
+          b.style.transform = 'translate(' + x.toFixed(0) + 'px,' + y.toFixed(0) + 'px) rotate(' + (x/3).toFixed(0) + 'deg) scale(.86)';
+          setTimeout(function(){ b.style.transform = ''; }, 620);
+          paint(0);
+          $('taunt').textContent = pick(TAUNTS);
+        };
+        b.addEventListener('mouseenter', flee);
+        b.addEventListener('pointerdown', flee);
+        b.addEventListener('click', function(e){ e.preventDefault(); flee(); });
+      }
+      row.appendChild(b);
+    })(i);
+
+    row.addEventListener('mouseleave', function(){ paint(0); });
+  }
+
+  function next(){
+    idx++;
+    if (idx < QUESTIONS.length) { render(); }
+    else { $('barFill').style.width = '100%'; runLoading(); }
+  }
+
+  function runLoading(){
+    show('s-load');
+    var i = 0;
+    $('loadTxt').textContent = LOADS[0];
+    var t = setInterval(function(){
+      i++;
+      if (i >= LOADS.length){ clearInterval(t); showResult(); return; }
+      $('loadTxt').textContent = LOADS[i];
+    }, 750);
+  }
+
+  function showResult(){
+    var info = TITLES[A.mon] || TITLES.comtam;
+    var score = 91 + (A.cay||0) * 2 + (A.lai === 'bao' ? 4 : A.lai === 'gia' ? 3 : A.lai === 'chacchan' ? 2 : 1);
+    if (score > 100) score = 100;
+
+    $('medal').textContent = info.m;
+    $('rTitle').textContent = info.t;
+    $('rScore').innerHTML = score + '<small>/100</small>';
+    $('rVerdict').innerHTML =
+      '<div>🍽️ <b>Chẩn đoán:</b> ' + info.d + '</div>' +
+      '<div>🌶️ ' + CAY[A.cay||0] + '</div>' +
+      '<div>⭐ <b>Chấm Cần Giờ:</b> 5/5 sao — hệ thống ghi nhận em hoàn toàn tự nguyện.</div>' +
+      '<div>🚐 ' + (LAI[A.lai] || LAI.co) + '</div>';
+
+    show('s-result');
+    rain();
+  }
+
+  function rain(){
+    var box = $('rain');
+    var emo = ['💖','🌸','🍤','🥟','🍚','🍧','🦐','⭐','💗','🎀'];
+    for (var i=0;i<30;i++) (function(i){
+      setTimeout(function(){
+        var s = document.createElement('span');
+        s.textContent = pick(emo);
+        s.style.left = (Math.random()*100) + 'vw';
+        s.style.animationDuration = (3.2 + Math.random()*2.6) + 's';
+        s.style.fontSize = (18 + Math.random()*22) + 'px';
+        box.appendChild(s);
+        setTimeout(function(){ if (s.parentNode) s.parentNode.removeChild(s); }, 6200);
+      }, i * 110);
+    })(i);
+  }
+
+  var vid = $('vid');
+  var src = vid.getElementsByTagName('source')[0];
+  function noVideo(){ vid.style.display = 'none'; $('vidPlaceholder').style.display = 'block'; }
+  src.addEventListener('error', noVideo);
+  vid.addEventListener('error', noVideo);
+
+  $('start').onclick = function(){ idx = 0; A = {}; show('s-quiz'); render(); };
+  $('toVideo').onclick = function(){
+    show('s-video');
+    if (vid.style.display !== 'none') { var p = vid.play(); if (p && p.catch) p.catch(function(){}); }
+  };
+  $('again').onclick = function(){ try{ vid.pause(); }catch(e){} show('s-welcome'); };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# ảnh & nhạc gốc — chỉ nằm trên máy, KHÔNG đẩy lên git
+images/
+photos/
+*.mp3
+*.m4a
+*.wav
+*.HEIC
+*.heic
+
+# file tạm khi dựng video
+.build/
+.DS_Store
+
+# video.mp4 KHÔNG chặn — cần đi kèm web khi deploy
+build.log
+video-goc.mp4
