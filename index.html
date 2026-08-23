@@ -120,6 +120,28 @@
   .placeholder{border:2px dashed var(--line2); border-radius:18px; padding:44px 22px; text-align:center; background:var(--pink3)}
   .placeholder code{background:#fff; padding:3px 9px; border-radius:7px; color:var(--pink); font-size:14px; border:1px solid var(--line)}
 
+  /* ---- lá thư ở trang đầu ---- */
+  .letter{
+    position:relative; margin-top:18px; padding:22px 20px 20px;
+    background:linear-gradient(180deg,#fff9fc,var(--pink3));
+    border:2px dashed var(--line2); border-radius:20px;
+    text-align:left; color:var(--ink);
+  }
+  .letter:before{
+    content:'💌'; position:absolute; top:-16px; left:18px;
+    font-size:26px; line-height:1; background:var(--card);
+    padding:0 6px; border-radius:99px;
+  }
+  .letter p{
+    margin:0 0 14px; font-size:15.5px; line-height:1.9; color:#6b2447;
+  }
+  .letter p:last-child{margin-bottom:0}
+  .letter em{color:var(--pink); font-style:italic; font-weight:600}
+  .letter .sign{
+    display:block; margin-top:14px; text-align:right;
+    font-size:13.5px; color:var(--muted); font-style:italic;
+  }
+
   .rain{position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden}
   .rain span{position:absolute; top:-8vh; font-size:26px; animation:fall linear forwards}
   @keyframes fall{to{transform:translateY(115vh) rotate(420deg); opacity:0}}
@@ -136,6 +158,10 @@
       <span class="kicker">Bản 2.0 · Đã kiểm định 💗</span>
       <h1>Chào mừng em đến với HỆ THỐNG ĐÁNH GIÁ CHUYẾN ĐI FOOD TOUR Ở SÀI GÒN</h1>
       <p class="sub">Xin chúc mừng, em vừa hoàn thành một chuyến đi ăn không hồi kết. Vui lòng cho chủ tour một vài <b>feedback</b> nhé.</p>
+      <div class="letter">
+        <p>Thật ra thì anh không có biết kết quả em chọn là gì dù cho là web ghi là đã ghi nhớ lựa chọn của em. Anh cũng không có biết là em có mở web ra xem chưa? Anh cứ ngồi ngẩn ngơ lâu lâu nhìn màn hình điện thoại để xem em có gửi gì cho anh không? Và vì không biết nên anh không dám nhắn gì cho em vì anh sợ em sẽ thấy phiền. Anh thấy em rất dễ thương vẫn trả lời tin nhắn của anh, dù đôi khi anh nhắn tào lao thôi. Nhiều lúc nhớ em không biết làm gì, anh cứ ngồi xem lại hình và tin nhắn cũ rồi lại buột miệng bảo là <em>&ldquo;Ôi Xương dễ thương quá.&rdquo;</em></p>
+        <p>Và ví dụ như hôm nay chủ nhật, anh lại tính bắt xe xuống Cần Thơ chỉ để nhìn em một cái rồi về, chỉ là anh không biết nên lấy lý do gì để xuống nữa. Thế là anh đành mở máy ra code mấy dòng này với một hy vọng là em sẽ lại mở web ra xem một lần nữa.</p>
+      </div>
       <button class="btn big" id="start">BẮT ĐẦU ĐÁNH GIÁ 🍤</button>
     </div>
   </section>
